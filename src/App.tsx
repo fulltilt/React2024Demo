@@ -125,29 +125,33 @@ const App: React.FC = () => {
             if (comments[idx])
               tempComments[idx] = tempComments[idx].concat([newComment]);
             else tempComments[idx] = [newComment];
+            console.log(tempComments)
             dispatch({ type: 'COMMENT', payload: tempComments })
           }}
         >
           Submit
         </button>
       </div>
-      {/* <ul>
+      <ul>
         {comments[idx] &&
           comments[idx].map((c, i) => (
-            <li key={idx}>
+            <li key={i}>
               {c.text} | {c.votes}{" "}
               <button
                 onClick={() => {
-                  let tempComment = Object.assign({}, comments[idx]);
-                  tempComment[i].votes++;
-                  dispatch({ type: 'COMMENT', payload: { ...comments, ...tempComment[i] } })
+                  let tempComments = [...comments[idx]];
+                  tempComments[i].votes++;
+                  dispatch({ type: 'COMMENT', payload: {
+                    ...comments,
+                    [idx]: tempComments
+                  }})
                 }}
               >
                 Upvote
               </button>
             </li>
           ))}
-      </ul> */}
+      </ul>
     </section>
   );
 }
