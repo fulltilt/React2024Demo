@@ -1,6 +1,6 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useCallback } from "react";
 import "./index.css";
-import { getDogs } from "./dogapi";
+import { useFetchImagesQuery } from "./store";
 
 export interface DogObject {
   title: string,
@@ -86,24 +86,37 @@ const App: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { images, idx, comments, inputValue } = state
 
-  async function getImages() {
-    let res = await getDogs();
-    dispatch({ type: 'IMAGES', payload: res })
-  }
+  const { data, isLoading } = useFetchImagesQuery()
+
+  const getImages = useCallback(async () => {
+    const dogs: DogObject[] = [];
+      data.data.children.forEach((c: any) => {
+        const title = c.data.title;
+        const url = c.data.preview?.images[0]?.resolutions[2]?.url || '';
+        url?.replace(/&amp;/g, "&")
+        let urlSplit = url.split('/')
+        let shortenedUrl = urlSplit[urlSplit.length - 1]
+        if (url) {
+          dogs.push({ title: title, url: shortenedUrl });
+        }
+      });
+
+    dispatch({ type: 'IMAGES', payload: dogs })
+  }, [data])
 
   useEffect(() => {
-    getImages();
-  }, []);
+    if (data) getImages()
+  }, [data, getImages]);
 
   return (
     <section className="container">
-      {state.images.length === 0 && <p>Loading...</p>}
-      {state.images.length > 0 && <img alt={idx.toString()} src={images[idx].url} />}
+      {isLoading && <p>Loading...</p>}
+      {images.length > 0 && <img alt={idx.toString()} src={images[idx].url} />}
       <div className="row">
         <button onClick={() => dispatch({ type: 'INDEX', payload: -1 })} className="prev">
           {"<<"}
         </button>
-        <span className="title">{images.length > 0 && images[state.idx].title}</span>
+        <span className="title">{images.length > 0 && images[idx].title}</span>
         <button onClick={() => dispatch({ type: 'INDEX', payload: 1 })} className="prev">
           {">>"}
         </button>
@@ -125,7 +138,7 @@ const App: React.FC = () => {
             if (comments[idx])
               tempComments[idx] = tempComments[idx].concat([newComment]);
             else tempComments[idx] = [newComment];
-            console.log(tempComments)
+
             dispatch({ type: 'COMMENT', payload: tempComments })
           }}
         >
