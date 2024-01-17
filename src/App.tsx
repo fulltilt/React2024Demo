@@ -90,7 +90,38 @@ const App: React.FC = () => {
 
   const getImages = useCallback(async () => {
     const dogs: DogObject[] = [];
-      data.data.children.forEach((c: any) => {
+      data.data.children.forEach((c: {
+        data: {
+          preview: {
+            images: {
+              resolutions: {
+                url: string
+              }[]
+            }[]
+          },
+          title: string
+        }
+      }) => {
+        /*
+        {
+            "data": {
+                "title": "Hendrix on his way to gather sheep",
+                "preview": {
+                    "images": [
+                        {
+                            "resolutions": [
+                                {},
+                                {},
+                                {
+                                    "url": "https://img.cdn4dd.com/s/managed/interview/tps-dogs/dog10.jpeg"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+        */
         const title = c.data.title;
         const url = c.data.preview?.images[0]?.resolutions[2]?.url || '';
         url?.replace(/&amp;/g, "&")
