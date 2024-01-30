@@ -7,6 +7,7 @@ const rootReducer = combineReducers({
   images: imagesReducer,
   [imagesApi.reducerPath]: imagesApi.reducer,
 });
+
 export type RootState = ReturnType<typeof rootReducer>;
 
 export const setupStore = (preloadedState?: RootState) =>
@@ -17,7 +18,7 @@ export const setupStore = (preloadedState?: RootState) =>
     },
   });
 
-setupListeners(setupStore({} as any).dispatch);
+setupListeners(setupStore({} as RootState).dispatch);
 
 export { useFetchImagesQuery } from "./apis/imagesApi";
 export type AppStore = ReturnType<typeof setupStore>;

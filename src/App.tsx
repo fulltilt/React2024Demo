@@ -151,69 +151,77 @@ const App: React.FC = () => {
     <section className="container">
       <h1>Demo</h1>
       {isLoading && <p>Loading...</p>}
-      {images.length > 0 && <img alt={idx.toString()} src={images[idx].url} />}
-      <div className="row">
-        <button
-          onClick={() => dispatch({ type: "INDEX", payload: -1 })}
-          className="prev"
-        >
-          {"<<"}
-        </button>
-        <span className="title">{images.length > 0 && images[idx].title}</span>
-        <button
-          onClick={() => dispatch({ type: "INDEX", payload: 1 })}
-          className="prev"
-        >
-          {">>"}
-        </button>
-      </div>
-      <div className="input">
-        <input
-          value={inputValue}
-          onChange={(e) => dispatch({ type: "INPUT", payload: e.target.value })}
-          type="text"
-        />
-        <button
-          onClick={() => {
-            const newComment: Comment = {
-              text: inputValue,
-              votes: 0,
-            };
+      {images.length > 0 && (
+        <div>
+          <img alt={idx.toString()} src={images[idx].url} />
+          <div className="row">
+            <button
+              onClick={() => dispatch({ type: "INDEX", payload: -1 })}
+              className="prev"
+            >
+              {"<<"}
+            </button>
+            <span className="title">
+              {images.length > 0 && images[idx].title}
+            </span>
+            <button
+              onClick={() => dispatch({ type: "INDEX", payload: 1 })}
+              className="prev"
+            >
+              {">>"}
+            </button>
+          </div>
+          <div className="input">
+            <input
+              value={inputValue}
+              onChange={(e) =>
+                dispatch({ type: "INPUT", payload: e.target.value })
+              }
+              type="text"
+            />
+            <button
+              onClick={() => {
+                const newComment: Comment = {
+                  text: inputValue,
+                  votes: 0,
+                };
 
-            let tempComments = Object.assign({}, comments);
-            if (comments[idx])
-              tempComments[idx] = tempComments[idx].concat([newComment]);
-            else tempComments[idx] = [newComment];
+                let tempComments = Object.assign({}, comments);
+                if (comments[idx])
+                  tempComments[idx] = tempComments[idx].concat([newComment]);
+                else tempComments[idx] = [newComment];
 
-            dispatch({ type: "COMMENT", payload: tempComments });
-          }}
-        >
-          Submit
-        </button>
-      </div>
-      <ul>
-        {comments[idx] &&
-          comments[idx].map((c, i) => (
-            <li key={i}>
-              {c.text} | {c.votes}{" "}
-              <button
-                onClick={() => {
-                  let tempComments = [...comments[idx]];
-                  tempComments[i].votes++;
-                  dispatch({
-                    type: "COMMENT",
-                    payload: {
-                      ...comments,
-                      [idx]: tempComments,
-                    },
-                  });
-                }}
-              >
-                Upvote
-              </button>
-            </li>
-          ))}
-      </ul>
+                dispatch({ type: "COMMENT", payload: tempComments });
+              }}
+            >
+              Submit
+            </button>
+          </div>
+          <ul>
+            {comments[idx] &&
+              comments[idx].map((c, i) => (
+                <li key={i}>
+                  {c.text} | {c.votes}{" "}
+                  <button
+                    onClick={() => {
+                      let tempComments = [...comments[idx]];
+                      tempComments[i].votes++;
+                      dispatch({
+                        type: "COMMENT",
+                        payload: {
+                          ...comments,
+                          [idx]: tempComments,
+                        },
+                      });
+                    }}
+                  >
+                    Upvote
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
     </section>
   );
 };

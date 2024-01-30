@@ -8,20 +8,18 @@
 //   expect(linkElement).toBeInTheDocument();
 // });
 
-import { render, screen } from "@testing-library/react";
-import { Provider } from "react-redux";
-// import { store } from "./store";
+import { screen } from "@testing-library/react";
 import { createServer } from "./test/server";
 import { renderWithProviders } from "./setupTests";
 import App from "./App";
 
-// async function renderComponent() {
-//   renderWithProviders(<App />);
+import userEvent from "@testing-library/user-event";
 
-//   await screen.findAllByRole("link");
-// }
+async function renderComponent() {
+  renderWithProviders(<App />);
+}
 
-describe("when user is not signed in", () => {
+describe("Initial tests", () => {
   createServer([
     {
       path: "https://img.cdn4dd.com/s/managed/interview/tps-dogs/api.json",
@@ -72,15 +70,23 @@ describe("when user is not signed in", () => {
   ]);
 
   test("page renders", async () => {
-    // await renderComponent();
-    // render(
-    //   <Provider store={store}>
-    //     <App />
-    //   </Provider>
-    // );
-    renderWithProviders(<App />);
+    await renderComponent();
 
-    // const title = screen.getByText(/demo/i);
-    // expect(title).toBeInTheDocument();
+    const title = screen.getByText(/demo/i);
+    expect(title).toBeInTheDocument;
+  });
+
+  test("test buttons", async () => {
+    // const button = await screen.findByRole("button", {
+    //   name: ">>",
+    // });
+    // userEvent.click(button);
+  });
+});
+
+describe("Redux tests", () => {
+  test("initialize slice with initialValue", () => {
+    // const listSliceInit = ListSlice(initialState, { type: "unknown" });
+    // expect(listSliceInit).toBe(initialState);
   });
 });
