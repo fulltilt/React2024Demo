@@ -8,7 +8,7 @@
 //   expect(linkElement).toBeInTheDocument();
 // });
 
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { createServer } from "./test/server";
 import { renderWithProviders } from "./setupTests";
 import App from "./App";
@@ -88,5 +88,34 @@ describe("Redux tests", () => {
   test("initialize slice with initialValue", () => {
     // const listSliceInit = ListSlice(initialState, { type: "unknown" });
     // expect(listSliceInit).toBe(initialState);
+  });
+
+  test("app should display image", async () => {
+    // const { getByText, getByAltText, queryByText } = renderWithProviders(
+    //   <App />
+    // );
+
+    // expect(queryByText(/loading.../i)).toBeInTheDocument;
+
+    // await WaitFor(() => {
+
+    // })
+
+    const table = document.createElement("table");
+
+    // wrap component with custom render function
+    const { container } = renderWithProviders(<App />, {
+      container: document.body.appendChild(table),
+    });
+
+    // const allRows = await screen.findAllByRole("row")
+
+    // await waitFor(() => {
+    //     expect(container).toBeInTheDocument();
+    // })
+
+    // await waitFor(() => {
+    //     expect(allRows.length).toBe(10);
+    // })
   });
 });
